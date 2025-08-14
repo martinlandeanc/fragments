@@ -318,3 +318,131 @@ a {
     grid-template-columns: 1fr;
   }
 }
+/* ===== EPIC MODE – realce estético para Método Fragments ===== */
+
+/* Vignette global sutil */
+body::before{
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(1200px 700px at 15% 0%, rgba(197,164,109,.14), transparent 60%),
+    radial-gradient(900px 600px at 90% 10%, rgba(139,30,63,.10), transparent 55%),
+    radial-gradient(1000px 500px at 50% 120%, rgba(15,42,63,.18), transparent 60%);
+  mix-blend-mode:multiply;
+}
+
+/* Aseguramos que el contenido esté por encima del vignette */
+.nav, .hero, .section, .footer { position: relative; z-index: 1; }
+
+/* Hero más épico */
+.hero{
+  min-height: 78vh;
+  display:flex; align-items:center;
+  background:
+    linear-gradient(180deg, rgba(15,42,63,.85), rgba(15,42,63,.55)),
+    url('assets/hero-1920x1080.jpg') center/cover no-repeat; /* <-- usa tu imagen */
+  color:#fff;
+  /* Parallax suave en desktop */
+  background-attachment: fixed;
+}
+@media (max-width: 900px){
+  .hero{ background-attachment: scroll; }
+}
+.hero-inner{ padding: 6rem 0 4rem; }
+.hero-title{
+  font-family: var(--font-title);
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  letter-spacing: .5px;
+  text-shadow: 0 2px 20px rgba(0,0,0,.35);
+}
+.badge{
+  display:inline-block;
+  margin: .25rem 0 1rem;
+  font-variant: small-caps;
+  letter-spacing: .6px;
+  background: linear-gradient(135deg, rgba(197,164,109,.18), rgba(197,164,109,.08));
+  border:1px solid rgba(197,164,109,.45);
+  color:#f5ead7;
+  padding:.35rem .6rem;
+  border-radius: 999px;
+  box-shadow: inset 0 0 10px rgba(197,164,109,.15);
+}
+.hero-subtitle{ opacity:.95; max-width: 60ch; }
+
+/* Marca en la nav (opc.) */
+.brand{ position:relative; }
+.brand-sub{
+  display:inline-block; margin-left:.35rem; font-size:.7rem; opacity:.8;
+  font-variant: small-caps; letter-spacing:.6px; color:var(--color-gold);
+}
+
+/* Títulos con filigrana */
+.section-title{
+  position:relative; padding-bottom:.6rem;
+  letter-spacing:.4px;
+}
+.section-title::after{
+  content:"✦";
+  position:absolute; left:0; bottom:-.2rem;
+  color: var(--color-carmine);
+  font-size: 1rem;
+}
+.section-title::before{
+  content:"";
+  position:absolute; left:1.6rem; right:0; bottom:0;
+  height:1px;
+  background: linear-gradient(90deg, rgba(197,164,109,.8), rgba(197,164,109,0));
+}
+
+/* Tarjetas con borde dorado sutil y efecto hover */
+.card{
+  border:1px solid rgba(197,164,109,.25);
+  box-shadow: 0 8px 30px rgba(0,0,0,.06);
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+.card:hover{
+  transform: translateY(-4px);
+  box-shadow: 0 14px 40px rgba(0,0,0,.10);
+  border-color: rgba(197,164,109,.45);
+}
+
+/* Imágenes de servicio con unificación de tono */
+.service-img{ filter: brightness(.96) contrast(1.05) saturate(1.02); }
+
+/* Cita épica */
+.quote{
+  background: linear-gradient(180deg, rgba(197,164,109,.18), rgba(197,164,109,.10));
+  border-block: 1px solid rgba(197,164,109,.35);
+}
+.quote-text{
+  font-family: var(--font-title);
+  font-size: clamp(1.2rem, 3vw, 1.6rem);
+}
+.quote-text span{ color: var(--color-carmine); }
+
+/* Botones con brillo dorado */
+.btn-primary{
+  background: linear-gradient(135deg, var(--color-gold), #a88a56);
+  color:#1b1b1b; border:0;
+  box-shadow: 0 6px 16px rgba(197,164,109,.35);
+  transition: transform .15s ease, box-shadow .2s ease, filter .2s ease;
+}
+.btn-primary:hover{ transform: translateY(-2px); filter: brightness(1.03); }
+.btn-outline{ border:1px solid rgba(255,255,255,.7); }
+
+/* Sección Sobre mí más elegante */
+.about .about-media img{ border:1px solid rgba(197,164,109,.3); border-radius: 14px; }
+
+/* Formulario y panel de contacto */
+.contact-form, .contact-info{
+  background: linear-gradient(180deg, rgba(255,255,255,1), rgba(255,255,255,.96));
+  border:1px solid rgba(197,164,109,.25);
+  border-radius: 14px;
+  box-shadow: 0 10px 28px rgba(0,0,0,.06);
+}
+
+/* Footer con brillo leve */
+.footer{
+  background: linear-gradient(180deg, #0b1e2e, #091a28);
+  border-top:1px solid rgba(197,164,109,.35);
+}
+
