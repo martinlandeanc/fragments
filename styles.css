@@ -287,12 +287,6 @@ body::before{
     display: none;
   }
 }
-/* Ocultar el botón de WhatsApp en mobile */
-@media (max-width: 768px) {
-  .btn-wa {
-    display: none;
-  }
-}
 
 /* ===== NAV – FIX MOBILE WRAP & SIZES ===== */
 @media (max-width: 768px){
@@ -325,4 +319,116 @@ body::before{
 
   /* el logo un pelín más compacto para que todo entre */
   .brand{ font-size: 1.15rem; }
+}
+/* === 1) SCROLL REVEAL (animaciones al entrar en viewport) === */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity .6s ease, transform .6s ease;
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+.reveal[data-reveal="left"]  { transform: translateX(-20px); }
+.reveal[data-reveal="right"] { transform: translateX(20px);  }
+.reveal[data-reveal="up"]    { transform: translateY(18px);  }
+.reveal[data-reveal="fade"]  { transform: none; }
+
+/* Stagger (pequeño retardo en listas) */
+.reveal-stagger > * { opacity: 0; transform: translateY(14px); }
+.reveal-stagger.is-visible > * { opacity:1; transform:none; }
+.reveal-stagger.is-visible > *:nth-child(1){ transition: .45s .05s ease; }
+.reveal-stagger.is-visible > *:nth-child(2){ transition: .45s .12s ease; }
+.reveal-stagger.is-visible > *:nth-child(3){ transition: .45s .19s ease; }
+.reveal-stagger.is-visible > *:nth-child(4){ transition: .45s .26s ease; }
+
+/* === 2) HOVER “VIVO” EN SERVICIOS/CARDS === */
+.service-img {
+  transition: transform .35s ease, filter .35s ease, box-shadow .35s ease;
+}
+.service:hover .service-img {
+  transform: scale(1.03);
+  filter: brightness(1) contrast(1.08) saturate(1.05);
+  box-shadow: 0 10px 26px rgba(0,0,0,.16);
+}
+.service {
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+.service:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 38px rgba(0,0,0,.12);
+  border-color: rgba(197,164,109,.55);
+}
+
+/* También un toquecito a las .card genéricas (ya tenías hover, lo afinamos) */
+.card { transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
+
+/* === 3) BOTÓN FLOTANTE DE WHATSAPP (solo mobile) === */
+.fab-wa{
+  position: fixed; right: 16px; bottom: 16px; z-index: 60;
+  display: none;                      /* oculta en desktop */
+  align-items: center; gap: .55rem;
+  background: #25D366; color:#fff;
+  padding: .68rem .9rem; border-radius: 999px;
+  box-shadow: 0 10px 22px rgba(37,211,102,.35);
+  font-weight: 700;
+  transition: transform .2s ease, filter .2s ease;
+}
+.fab-wa i{ font-size: 1.1rem; }
+.fab-wa:hover{ transform: translateY(-2px); filter: brightness(1.05); }
+
+/* Pequeño “latido” cada tanto (no invasivo) */
+@keyframes wa-bounce {
+  0%, 92%, 100% { transform: translateY(0); }
+  95%          { transform: translateY(-6px); }
+  97%          { transform: translateY(0); }
+}
+.fab-wa { animation: wa-bounce 12s infinite; }
+
+/* Solo visible en mobile */
+@media (max-width: 768px){
+  .fab-wa{ display: inline-flex; }
+}
+
+/* Partículas por ENCIMA del contenido (muy sutiles, no capturan clics) */
+.fx-parallax{
+  position: fixed; inset: 0;
+  z-index: 5;               /* <- clave: mayor que 1 */
+  pointer-events: none;
+}
+
+
+.fx-layer{
+  position: absolute; inset: 0;
+  will-change: transform;
+}
+
+/* una partícula */
+.fx-spark{
+  position: absolute; width: 6px; height: 6px; border-radius: 50%;
+  opacity: .0; /* arranca invisible y aparece con fade */
+  filter: blur(0.3px);
+  /* brillo suave: mezcla sobre fondo */
+  mix-blend-mode: screen;
+  animation: fx-twinkle 6s ease-in-out infinite;
+}
+
+/* más brillo en el centro y halo suave */
+.fx-spark--gold  { background: radial-gradient(circle, rgba(197,164,109,1) 0%, rgba(197,164,109,.18) 55%, rgba(197,164,109,0) 72%); }
+.fx-spark--blue  { background: radial-gradient(circle, rgba(46,115,169,1)   0%, rgba(46,115,169,.18) 55%, rgba(46,115,169,0) 72%); }
+.fx-spark--white { background: radial-gradient(circle, rgba(255,255,255,1)  0%, rgba(255,255,255,.20) 55%, rgba(255,255,255,0) 72%); }
+
+/* halo extra para que destaquen sobre fondos claros */
+.fx-spark {
+  filter: drop-shadow(0 0 4px rgba(255,255,255,.25));
+}
+
+/* un toque más de opacidad pico en el parpadeo */
+@keyframes fx-twinkle{
+  0%,100% { opacity: .0; transform: translateY(0) scale(1); }
+  12%     { opacity: .55; }
+  50%     { opacity: .98; transform: translateY(-4px) scale(1.05); } /* antes .85 */
+  88%     { opacity: .45; }
 }

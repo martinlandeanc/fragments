@@ -19,6 +19,15 @@
 </head>
 <body>
 
+    <!-- Partículas parallax (polvo mágico) -->
+    <div class="fx-parallax" aria-hidden="true">
+      <!-- capas; el JS las llenará con partículas -->
+      <div class="fx-layer" data-depth="0.15"></div>
+      <div class="fx-layer" data-depth="0.30"></div>
+      <div class="fx-layer" data-depth="0.55"></div>
+    </div>
+
+
   <!-- NAV -->
   <nav class="nav">
     <div class="nav-inner container">
@@ -233,6 +242,115 @@
     </div>
   </footer>
 
-  <!-- (Opcional) Si implementamos menú mobile, agregamos un pequeño JS luego -->
+ <script>
+  // === Scroll Reveal con IntersectionObserver ===
+  (function(){
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting){
+          entry.target.classList.add('is-visible');
+          // una vez visible, no observamos más
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    // Selección automática de elementos “revelables”
+    const autoTargets = [
+      '.section-title', '.section-lead',
+      '.highlights .card', '.grid-3 .service',
+      '.about .about-media img', '.testimonial.card',
+      '#que-es .container > *:not(:empty)',
+      '#servicios .container > *:not(:empty)'
+    ];
+
+    document.querySelectorAll(autoTargets.join(',')).forEach(el => {
+      // si ya tienen la clase/atributo, respetamos lo que puso el autor
+      if (!el.classList.contains('reveal') && !el.dataset.reveal){
+        el.classList.add('reveal');
+      }
+      io.observe(el);
+    });
+
+    // Grupos con stagger (si existiera)
+    document.querySelectorAll('.reveal-stagger').forEach(el => io.observe(el));
+  })();
+</script>
+
+<script>
+(function(){
+  const root   = document.querySelector('.fx-parallax');
+  const layers = document.querySelectorAll('.fx-layer');
+  if (!root || !layers.length) return;
+
+  const prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Configurable: cantidad por capa (capas profundas menos, cercanas más)
+  const PARTICLES = [
+    { sel: layers[0], count: 18, colors: ['gold','white'], sizes: ['xs','sm'] },
+    { sel: layers[1], count: 22, colors: ['gold','blue','white'], sizes: ['sm','md'] },
+    { sel: layers[2], count: 16, colors: ['gold','blue'], sizes: ['md','lg'] }
+  ];
+
+  // Utilidades
+  const rand = (min, max) => Math.random() * (max - min) + min;
+  const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+
+  // Crear partículas
+  PARTICLES.forEach(cfg => {
+    for (let i=0; i<cfg.count; i++){
+      const s = document.createElement('span');
+      const col = pick(cfg.colors);
+      const size = pick(cfg.sizes);
+      s.className = `fx-spark fx-spark--${col} fx-spark--${size}`;
+      // posición inicial (0-100vw/vh)
+      s.style.left = `${rand(0, 100)}vw`;
+      s.style.top  = `${rand(0, 100)}vh`;
+      // desfasar animación para que no parpadeen juntas
+      s.style.animationDelay = `${rand(0, 6)}s`;
+      // leve variación de duración
+      s.style.animationDuration = `${rand(5.5, 8.5)}s`;
+      cfg.sel.appendChild(s);
+    }
+  });
+
+  // Parallax en scroll (desplaza capas a distintas velocidades)
+  let ticking = false;
+  const speeds = []; // guardamos el depth por capa
+  layers.forEach(l => speeds.push(parseFloat(l.dataset.depth || '0.2')));
+
+  function onScroll(){
+    if (prefersReduce) return; // respetar reduce motion
+    if (!ticking){
+      window.requestAnimationFrame(() => {
+        const y = window.scrollY || window.pageYOffset;
+        layers.forEach((layer, i) => {
+          // factor sutil: entre 0.05 y 0.18 aprox.
+          layer.style.transform = `translateY(${-(y * (0.08 + speeds[i]*0.12)).toFixed(2)}px)`;
+        });
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll(); // posición inicial
+
+  // Parallax leve con el mouse (desktop): micro-tilt horizontal
+  function onMove(e){
+    if (prefersReduce) return;
+    const nx = (e.clientX / window.innerWidth) - 0.5; // -0.5 a 0.5
+    layers.forEach((layer, i) => {
+      const dx = (nx * (2 + i)) * 2; // 2–8px aprox
+      layer.style.transform += ` translateX(${dx.toFixed(2)}px)`;
+    });
+  }
+  if (window.matchMedia('(hover: hover)').matches){
+    window.addEventListener('mousemove', onMove, { passive: true });
+  }
+})();
+</script>
+
+
 </body>
 </html>
