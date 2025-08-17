@@ -293,3 +293,36 @@ body::before{
     display: none;
   }
 }
+
+/* ===== NAV – FIX MOBILE WRAP & SIZES ===== */
+@media (max-width: 768px){
+  /* contenedor: permitimos que baje la lista a la línea de abajo */
+  .nav-inner{
+    flex-wrap: wrap;
+    row-gap: .5rem;
+    column-gap: .5rem;
+  }
+
+  /* ocultar el CTA del header en mobile (ya lo hiciste, reforzamos) */
+  .header-cta{ display:none !important; }
+
+  /* la lista ocupa todo el ancho, se envuelve y se centra */
+  .nav-links{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;            /* 👈 permite pasar a 2 líneas */
+    justify-content: center;    /* 👈 centrado de los ítems */
+    gap: .4rem .75rem;          /* menos separación */
+    padding-top: .25rem;
+  }
+
+  /* tamaño y box de los enlaces: más compactos en móvil */
+  .nav-links a{
+    font-size: .95rem;
+    line-height: 1.2;
+    padding: .2rem .3rem;       /* área táctil sin desbordar */
+  }
+
+  /* el logo un pelín más compacto para que todo entre */
+  .brand{ font-size: 1.15rem; }
+}
